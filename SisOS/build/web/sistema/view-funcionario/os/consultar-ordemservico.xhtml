@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+
+            <ui:define name="content">
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <center><font color="#017c03"><h3>HISTÓRICO ORDENS DE SERVIÇO</h3></font></center>
+                                <p:separator />
+                                <h:form>
+                                    <p:commandButton style="background: #d6f5ef" value="Relatório" actionListener="#{ordemServicoMB.chamarRelatorio()}" ajax="false"/>
+                                </h:form>
+                                <br></br>
+                                <p:dataTable rows="10" paginator="true" id="tabelaDialog" var="obj"
+                                                     value="#{ordemServicoMB.listaOrdemServico}">
+
+                                                <p:column style="background: #F8FBEF" headerText="Cliente" sortBy="#{servico.cliente.nome}" filterBy="#{servico.cliente.nome}">
+                                                        <h:outputText value="#{obj.cliente.nome}" />
+                                                </p:column>
+
+                                         
+
+                                            <p:column style="background: #F8FBEF" headerText="Valor OS" sortBy="#{obj.valorTotalOrdemServico}" filterBy="#{obj.valorTotalOrdemServico}">
+                                                <h:outputText value="#{obj.valorTotalOrdemServico}" >
+                                                                <f:convertNumber pattern="¤#,##0.00" currencySymbol="R$" />
+                                                        </h:outputText>
+                                                </p:column>
+                                                <p:column style="background: #F8FBEF" headerText="Status" sortBy="#{obj.status}" filterBy="#{status}">
+                                                        <h:outputText value="#{obj.status}" />
+                                                </p:column>
+
+                                            <p:column style="background: #F8FBEF" headerText="Data Emissão" sortBy="#{obj.dtOrdemServico}" filterBy="#{obj.dtOrdemServico}">
+                                                <h:outputText value="#{obj.dtOrdemServico}">
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                </p:column>
+                                            
+                                            
+                                                <p:column style="background: #F8FBEF" headerText="Data Vcto" sortBy="#{obj.dtVencimento}" filterBy="#{obj.dtVencimento}">
+                                                            <h:outputText value="#{obj.dtVencimento}">
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                    
+                                                </p:column>
+                                            
+
+                                        </p:dataTable>
+                                    
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

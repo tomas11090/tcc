@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+            <ui:define name="content">               
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                    
+                                <center><font color="#017c03"><h3>CADASTRO DE USUÁRIOS</h3></font></center>
+                                <p:separator />
+                                <h:form id="formBotaoNovoUsuario">
+                                    <p:commandButton style="background: #d6f5ef"
+                                                     value="Novo Usuario" 
+                                                     update="formFormularioUsuario"
+                                                     oncomplete="PF('dialogUsuario').show()"/>   
+                                </h:form>
+                                <br></br>
+                                
+                                
+                                
+                                <p:dialog id="dialogUsuario" header="Cadastro Usuario" widgetVar="dialogUsuario" modal="true" height="auto" responsive="true">
+                                    <p:messages id ="mensagem" />
+                                    <h:form id="formFormularioUsuario">
+                                        <p:panelGrid columns="2" styleClass="semBorda" >
+                                            <h:outputText value="Nome: "/>
+                                            <p:inputText value="#{usuarioMB.usuario.nome}"/>
+
+                                            <h:outputText value="Email: "/>
+                                            <p:inputText value="#{usuarioMB.usuario.email}"/>
+
+                                            <h:outputText  value="Senha: "/>
+                                            <p:password feedback="true" 
+promptLabel="Digite a senha" weakLabel="Força da senha : Fraca" 
+goodLabel="Força da senha : Média" strongLabel="Força da senha : Forte" value="#{usuarioMB.usuario.senha}"/>
+                                            
+                                            <h:outputText value="Perfil: "/>
+                                            <p:selectOneMenu style="width: 100%" id="permissao"
+                                                            value="#{usuarioMB.usuario.perfil}" 
+                                                            filter="true"
+                                                            filterMatchMode="startsWith">
+                                                    <f:selectItem itemLabel="Selecione" itemValue="0"/>
+                                                    <f:selectItem itemLabel="ADMINISTRADOR" 
+                                                            itemValue="ADMINISTRADOR" />
+                                                    <f:selectItem itemLabel="FUNCIONARIO" 
+                                                            itemValue="FUNCIONARIO" /> 
+                                            </p:selectOneMenu>
+                                            
+                                    
+
+                                            <BR></BR><BR></BR>
+                                            <p:commandButton value="Inserir"
+                                                             actionListener="#{usuarioMB.inserir()}"
+                                                             oncomplete="handleComplete(xhr, status, args)"
+                                                             update=":formTabelaUsuario, :mensagem"
+                                                             style="width: 100%; background: #d6f5ef"/>
+                                            <BR></BR>
+                                        </p:panelGrid>
+                                    </h:form>
+                                </p:dialog>    
+
+                                <h:form id="formTabelaUsuario" style="text-align: center" >
+                                    <p:dataTable rows="10" paginator="true" value="#{usuarioMB.listaUsuarios}" var="usuario">
+                                        <p:column style="background: #F8FBEF" sortBy="#{usuario.nome}" filterBy="#{usuario.nome}" headerText="Nome">
+                                            <h:outputText value="#{usuario.nome}"/>
+                                        </p:column>
+
+                                        <p:column style="background: #F8FBEF" sortBy="#{perfil.nome}" filterBy="#{perfil.nome}" headerText="Perfil">
+                                            <h:outputText value="#{usuario.perfil}"/>
+                                        </p:column>
+
+                                        <p:column style="background: #F8FBEF" 
+                                                  headerText="Ação">
+                                            <p:commandButton value="Alterar" 
+                                                    oncomplete="PF('dialogUsuario').show()" 
+                                                    update=":formFormularioUsuario"
+                                                    style="background: #d6f5ef"
+                                                    icon="ui-icon-document">
+                                                <f:setPropertyActionListener value="#{usuario}" target="#{usuarioMB.usuario}"/>
+                                            </p:commandButton>
+                                            <p:commandButton style="background: #ffdacc"
+                                                             value="Excluir" 
+                                                             update="@form" 
+                                                             actionListener="#{usuarioMB.remover(usuario.id)}">
+                                                <p:confirm header="Confirmação" message="Deseja realmente excluir" icon="ui-icon-alert"/>
+                                            </p:commandButton>
+                                        </p:column>   
+                                    </p:dataTable>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                </h:form>
+                                
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div> 
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>
+                <script type="text/javascript">
+                                    function handleComplete(xhr, status, args) {
+                                        if (!args.validationFailed) {
+                                            PF('dialogUsuario').hide();
+                                        } else {
+                                        }
+                                    }
+                                </script>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

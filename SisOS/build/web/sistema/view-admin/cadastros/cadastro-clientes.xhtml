@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+      
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+            <ui:define name="content">
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <center><font color="#017c03"><h3>CADASTRO DE CLIENTES</h3></font></center>
+                                <p:separator />
+                                
+                                <h:form id="formBotaoNovoCliente">
+                                    <p:commandButton style="background: #d6f5ef" 
+                                                    value="Novo Cliente"
+                                                     update=":formFormularioCliente" 
+                                                     oncomplete="PF('dialogCliente').show()"/>
+                                    
+                                    <p:commandButton style="background: #d6f5ef" value="Relatório" actionListener="#{clienteMB.chamarRelatorio()}" ajax="false"/>
+                                </h:form>
+                                
+<!--                                <BR></BR>
+                                <h:form id="formBotaoNovoPesquisar">
+                                    <p:commandButton style="background: #d6f5ef" 
+                                                    value="Pesquisar Cliente"
+                                                     update=":formFormularioCliente" 
+                                                     oncomplete="PF('dialogCliente').show()"/>
+                                </h:form>-->
+                                <BR></BR>
+                                
+                                <h:form id="formTabelaCliente" style="text-align: center">
+                                    <p:dataTable rows="10" paginator="true" value="#{clienteMB.listaClientes}" var="cliente">
+                                        <p:column style="background: #F8FBEF" headerText="Nome" sortBy="#{cliente.nome}" filterBy="#{cliente.nome}" >
+                                            <h:outputText value="#{cliente.nome}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Telefone" sortBy="#{cliente.telefone}" filterBy="#{cliente.telefone}" >
+                                            <h:outputText value="#{cliente.telefone}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Endereço" sortBy="#{cliente.endereco}" filterBy="#{cliente.endereco}" >
+                                            <h:outputText value="#{cliente.endereco}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Numero" sortBy="#{cliente.numero}" filterBy="#{cliente.numero}" >
+                                            <h:outputText value="#{cliente.numero}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Cidade" sortBy="#{cliente.cidade.nome}" filterBy="#{cliente.cidade.nome}" >
+                                            <h:outputText value="#{cliente.cidade.nome}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Ações">
+                                            <p:commandButton value="Alterar" 
+                                                             style="background: #d6f5ef"
+                                                             oncomplete="PF('dialogCliente').show()"
+                                                             update=":formFormularioCliente" >
+                                                <f:setPropertyActionListener value="#{cliente}" target="#{clienteMB.cliente}"/>
+                                            </p:commandButton>    
+                                            <p:commandButton value="Excluir" style="background: #ffdacc" update="@form" actionListener="#{clienteMB.remover(cliente.id)}">
+                                                <p:confirm header="Confirmação" message="Deseja excluir o Cliente?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+
+                                </h:form>
+
+                                <p:dialog id="dialogCliente" header="Cadastro Cliente" widgetVar="dialogCliente" modal="true" width="auto" height="auto" responsive="true">
+                                    <p:messages id ="mensagem" />
+                                    <h:form id="formFormularioCliente">
+                                        <p:panelGrid columns="2" styleClass="semBorda" >
+                                            <h:outputText value="Nome: "/>
+                                            <p:inputText value="#{clienteMB.cliente.nome}"
+                                                         validator="validarNome"/>
+                                            <h:outputLabel for="cpf" value="CPF: "/>
+                                            <p:inputText value="#{clienteMB.cliente.documento}"
+                                                         
+                                                         validator="validarCpf"/>
+                                            <h:outputText value="RG: "/>
+                                            <p:inputText value="#{clienteMB.cliente.rgIE}"
+                                                         />
+                                            <h:outputText value="Endereço: "/>
+                                            <p:inputText value="#{clienteMB.cliente.endereco}"/>
+                                            <h:outputText value="Número: "/>
+                                            <p:inputText value="#{clienteMB.cliente.numero}"/>
+                                            <h:outputText value="Complemento: "/>
+                                            <p:inputText value="#{clienteMB.cliente.complemento}"/>
+                                            <h:outputText value="Bairro: "/>
+                                            <p:inputText value="#{clienteMB.cliente.bairro}"/>
+                                            <h:outputText value="Cidade:"/>
+                                            <p:selectOneMenu style="width: 100%"
+                                                id="cidade" converter="converterCidade" value="#{clienteMB.cliente.cidade}" required = "true" requiredMessage="Escolha uma cidade">
+                                                <f:selectItem itemLabel="Selecione"/>
+                                                <f:selectItems value="#{cidadeMB.listaCidades}" 
+                                                               var ="cidade"
+                                                               itemLabel="#{cidade.nome}"
+                                                               itemValue="#{cidade}"/>
+                                            </p:selectOneMenu>
+                                            <h:outputText value="CEP:"/>
+                                            <p:inputText
+                                                value="#{clienteMB.cliente.cep}" 
+                                                validator="validarCep"
+                                                />
+                                            <p:outputLabel for="telefone" value="Telefone:"/>
+                                            <p:inputMask id="telefone" 
+                                                         value="#{clienteMB.cliente.telefone}" 
+                                                         mask="(99)99999-9999"/>
+                                            <h:outputText value="Observações: "/>
+                                            <p:inputText value="#{clienteMB.cliente.observacao}" style=" height:100px;" />
+                                            
+                                            <BR></BR>
+                                        <p:commandButton value="Inserir" 
+                                                             style="width: 100%; background: #d6f5ef"
+                                                             actionListener="#{clienteMB.inserir()}"
+                                                             oncomplete="handleComplete(xhr, status, args)"
+                                                             update=":formTabelaCliente, :mensagem"/>   
+                                            
+                                        </p:panelGrid>
+                                        
+                                    </h:form>
+                                </p:dialog>
+                                <script type="text/javascript">
+                                    function handleComplete(xhr, status, args) {
+                                        if (!args.validationFailed) {
+                                            PF('dialogCliente').hide();
+                                        } else {
+                                        }
+                                    }                              
+                                </script>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div>
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

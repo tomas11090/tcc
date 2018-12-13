@@ -1,0 +1,117 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+
+            <ui:define name="content">
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <center><font color="#017c03"><h3>CADASTRO DE PRODUTOS</h3></font></center>
+                                <p:separator />
+                                <h:form id="formBotaoNovoProduto">
+                                    <p:commandButton style="background: #d6f5ef" 
+                                                     value="Novo Produto" 
+                                                     update=":formFormularioProduto" 
+                                                     oncomplete="PF('dialogProduto').show()"/>
+                                    <p:commandButton style="background: #d6f5ef" value="Relatório" actionListener="#{produtoMB.chamarRelatorio()}" ajax="false"/>
+                                </h:form>
+                                <BR></BR>
+                                
+                                <h:form id="formTabelaProduto" style="text-align: center" >
+                                    <p:dataTable rows="10" paginator="true" value="#{produtoMB.listaProduto}" var="produto" >
+                                        <p:column style="background: #F8FBEF"  sortBy="#{produto.nome}" filterBy="#{produto.nome}" headerText="Nome">
+                                            <h:outputText value="#{produto.nome}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF"  sortBy="#{produto.marca}" filterBy="#{produto.marca}" headerText="Marca">
+                                            <h:outputText value="#{produto.marca}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF"  sortBy="#{produto.modelo}" filterBy="#{produto.modelo}" headerText="Modelo">
+                                            <h:outputText value="#{produto.marca}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF"  sortBy="#{produto.valorVenda}" filterBy="#{produto.valorVenda}" headerText="Valor">
+                                            <h:outputText value="#{produto.valorVenda}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF"  sortBy="#{produto.quantidadeEstoque}" filterBy="#{produto.quantidadeEstoque}" headerText="Estoque">
+                                            <h:outputText value="#{produto.quantidadeEstoque}"/>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Ações" style="background: #F8FBEF">
+                                            <p:commandButton style="background: #d6f5ef" value="Alterar" oncomplete="PF('dialogProduto').show()" update=":formFormularioProduto" >
+                                                <f:setPropertyActionListener value="#{produto}" target="#{produtoMB.produto}"/>
+                                            </p:commandButton>
+                                            
+                                            <p:commandButton style="background: #ffdacc" value="Excluir" update="@form" actionListener="#{produtoMB.remover(produto.id)}">
+                                                <p:confirm header="Confirmação" message="Deseja excluir o Produto?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+
+                                </h:form>
+                                
+                                <p:dialog id="dialogProduto" header="Cadastro Produto" widgetVar="dialogProduto" modal="true" height="auto" responsive="true">
+                                    
+                                    <h:form  id="formFormularioProduto">
+                                        <p:panelGrid columns="2" styleClass="semBorda">
+                                            <h:outputText value="Nome"/>
+                                            <p:inputText value="#{produtoMB.produto.nome}"/>
+                                            
+                                            <h:outputText value="Marca"/>
+                                            <p:inputText value="#{produtoMB.produto.marca}"/>
+                                            
+                                            <h:outputText value="Modelo"/>
+                                            <p:inputText value="#{produtoMB.produto.modelo}"/>
+                                            
+                                            <h:outputText value="Valor"/>
+                                            <p:inputText value="#{produtoMB.produto.valorVenda}"/>
+                                            
+                                            <h:outputText value="Estoque"/>
+                                            <p:inputText value="#{produtoMB.produto.quantidadeEstoque}"/>
+                                            
+                                        <BR></BR>    
+                                        <p:commandButton value="Inserir" 
+                                                             actionListener="#{produtoMB.inserir()}"
+                                                             oncomplete="PF('dialogProduto').hide()"
+                                                             update=":formTabelaProduto"
+                                                             style="width: 100%; background: #d6f5ef"/>
+                                            
+                                        </p:panelGrid>
+                                       
+                                       
+                                    </h:form>
+                                </p:dialog>
+                                
+                                
+                            
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div>
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>
+                                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

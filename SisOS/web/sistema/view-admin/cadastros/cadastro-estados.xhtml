@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./../template-admin.xhtml">           
+            <ui:define name="content">
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <center><font color="#017c03"><h3>CADASTRO DE ESTADOS</h3></font></center>
+                                <p:separator />
+                                <h:form id="formBotaoNovoEstado">
+                                    <p:commandButton style="background: #d6f5ef" 
+                                                     value="Novo Estado" 
+                                                     update=":formFormularioEstado" 
+                                                     oncomplete="PF('dialogEstado').show()"/>
+                                </h:form>
+                                <BR></BR>
+
+                                <h:form id="formTabelaEstado" style="text-align: center" >
+                                    <p:dataTable rows="10" paginator="true" value="#{estadoMB.listaEstados}" var="estado" >
+                                        <p:column style="background: #F8FBEF"  sortBy="#{estado.nome}" filterBy="#{estado.nome}" headerText="Nome">
+                                            <h:outputText value="#{estado.nome}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" sortBy="#{estado.sigla}" filterBy="#{estado.sigla}" headerText="Sigla" >
+                                            <h:outputText value="#{estado.sigla}"/>   
+                                        </p:column>
+                                        <p:column headerText="Ações" style="background: #F8FBEF">
+                                            <p:commandButton style="background: #d6f5ef" value="Alterar" oncomplete="PF('dialogEstado').show()" update=":formFormularioEstado" >
+                                                <f:setPropertyActionListener value="#{estado}" target="#{estadoMB.estado}"/>
+                                            </p:commandButton>    
+                                            <p:commandButton style="background: #ffdacc" value="Excluir" update="@form" actionListener="#{estadoMB.remover(estado.id)}">
+                                                <p:confirm header="Confirmação" message="Deseja excluir o Estado?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+
+                                </h:form>
+
+                                <p:dialog id="dialogEstado" header="Cadastro Estado" widgetVar="dialogEstado" modal="true" height="auto" responsive="true">
+                                    
+                                    <h:form  id="formFormularioEstado">
+                                        <p:panelGrid columns="2" styleClass="semBorda">
+                                            <h:outputText value="Nome"/>
+                                            <p:inputText value="#{estadoMB.estado.nome}"/>
+                                            <h:outputText value="Sigla"/>
+                                            <p:inputText value="#{estadoMB.estado.sigla}"/>
+                                         
+                                        
+                                        <BR></BR>    
+                                        <p:commandButton value="Inserir" 
+                                                             actionListener="#{estadoMB.inserir()}"
+                                                             oncomplete="PF('dialogEstado').hide()"
+                                                             update=":formTabelaEstado"
+                                                             style="width: 100%; background: #d6f5ef"/>
+                                            
+                                        </p:panelGrid>
+                                       
+                                       
+                                    </h:form>
+                                </p:dialog> 
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div>
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

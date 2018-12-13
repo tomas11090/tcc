@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+
+            <ui:define name="content">
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <center><font color="#017c03"><h3>CADASTRO DE SERVIÇOS</h3></font></center>
+                                <p:separator />
+                                
+                                <h:form id="formBotaoNovoServico">
+                                    <p:commandButton style="background: #d6f5ef" 
+                                                     value="Novo Servico" 
+                                                     update=":formFormularioServico" 
+                                                     oncomplete="PF('dialogServico').show()"/>
+                                </h:form>
+                                <BR></BR>
+                                
+                                <h:form id="formTabelaServico" style="text-align: center" >
+                                    <p:dataTable rows="10" paginator="true" value="#{servicoMB.listaServicos}" var="servico" >
+                                        <p:column style="background: #F8FBEF"  sortBy="#{servico.descricao}" filterBy="#{servico.descricao}" headerText="Descricao">
+                                            <h:outputText value="#{servico.descricao}"/>
+                                        </p:column>
+                                        
+<!--                                        <p:column style="background: #F8FBEF"  sortBy="#{servico.valorOS}" filterBy="#{servico.valorOS}" headerText="ValorItem">
+                                            <h:outputText value="#{servico.valorOS}"/>
+                                        </p:column>
+                                        
+                                        <p:column style="background: #F8FBEF"  sortBy="#{servico.quantidadeEstoque}" filterBy="#{servico.quantidadeEstoque}" headerText="Quantidade">
+                                            <h:outputText value="#{servico.quantidadeEstoque}"/>
+                                        </p:column>-->
+                                        
+                                        <p:column headerText="Ações" style="background: #F8FBEF">
+                                            <p:commandButton style="background: #d6f5ef" value="Alterar" oncomplete="PF('dialogServico').show()" update=":formFormularioServico" >
+                                                <f:setPropertyActionListener value="#{servico}" target="#{servicoMB.servico}"/>
+                                            </p:commandButton>    
+                                            <p:commandButton style="background: #ffdacc" value="Excluir" update="@form" actionListener="#{servicoMB.excluir(servico.id)}">
+                                                <p:confirm header="Confirmação" message="Deseja excluir o Servico?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+
+                                </h:form>
+                                
+                                <p:dialog id="dialogServico" header="Cadastro Servico" widgetVar="dialogServico" modal="true" height="auto" responsive="true">
+                                    
+                                    <h:form  id="formFormularioServico">
+                                        <p:panelGrid columns="2" styleClass="semBorda">
+                                            <h:outputText value="Nome"/>
+                                            <p:inputText value="#{servicoMB.servico.descricao}"/>
+                                            
+                                            <!--<h:outputText value="Quantidade"/>-->
+                                            <p:inputText disabled="true" style="visibility:hidden"  value="#{servicoMB.servico.quantidadeEstoque}"/>
+                                            
+                                            <!--<h:outputText value="Valor Item"/>-->
+                                            <p:inputText disabled="true" style="visibility:hidden" value="#{servicoMB.servico.valorOS}"/>
+                                            
+                                        <BR></BR>    
+                                        <p:commandButton value="Inserir" 
+                                                             actionListener="#{servicoMB.inserir()}"
+                                                             oncomplete="PF('dialogServico').hide()"
+                                                             update=":formTabelaServico"
+                                                             style="width: 100%; background: #d6f5ef"/>
+                                            
+                                        </p:panelGrid>
+                                       
+                                       
+                                    </h:form>
+                                </p:dialog> 
+                                
+                                
+                                
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div>
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

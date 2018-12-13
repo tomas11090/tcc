@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+
+            <ui:define name="content">
+                
+                
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <center><font color="#017c03"><h3>GERAR VENDA</h3></font></center>
+                                <p:separator />
+                                
+                                <p:growl id="mensagem" />
+                       
+                                <h:form id="formularioCabecalhoVenda"  >
+                                        <p:panelGrid columns="2" styleClass="semBorda">
+                                            <h:outputText  value="Data Emissão:" />
+                                            <p:calendar pattern="dd/MM/yyyy" value="#{vendaMB.venda.dtVenda}" />
+                                            <h:outputText value="Cliente" />
+                                            <p:selectOneMenu filter="true"
+                                                            filterMatchMode="startsWith" 
+                                                            style="width: auto" 
+                                                            value="#{vendaMB.venda.cliente}"
+                                                            converter="converterCliente" >
+                                                    <f:selectItems value="#{clienteMB.listaClientes}" var="obj"
+                                                                itemLabel="#{obj.nome}" itemValue="#{obj}" />
+                                            </p:selectOneMenu>
+                                            <h:outputText value="Observações:" />
+                                            <p:inputText value="#{clienteMB.cliente.observacao}" style="width: auto" />
+                                            <h:outputText  value="Data Vencimento:" />
+                                                <p:calendar pattern="dd/MM/yyyy" value="#{vendaMB.venda.dtVencimento}" />
+                                        </p:panelGrid>
+                                        <p:separator></p:separator>
+                                        <!-- 		INÍCIO ITENS DE VENDA -->
+                                        <p:panelGrid columns="5" styleClass="semBorda">
+                                            <h:outputText value="Produto:" />
+                                                <p:selectOneMenu filter="true"
+                                                            filterMatchMode="startsWith"
+                                                            style="width: 100%" 
+                                                            value="#{vendaMB.itensVenda.produto}"
+                                                            converter="converterProduto" >
+                                                    <f:selectItems  value="#{produtoMB.listaProduto}" var="obj"
+                                                                itemLabel="#{obj.nome}" itemValue="#{obj}" />
+                                                </p:selectOneMenu>
+                                                <h:outputText value="Quantidade:" />
+                                                <p:inputText id="inputQtd" value="#{vendaMB.itensVenda.quantidade}" />
+                                                <p:commandButton style="background: #d6f5ef"  value="Add" update="tabelaItensVenda,inputQtd"
+                                                                actionListener="#{vendaMB.adicionarItem()}" />
+                                                
+                                                
+                                        </p:panelGrid>
+                                        
+                                        
+                                        
+                                        
+                                        <!-- 		FIM DO ITENS DE VENDA --><h3>Lista de Produtos</h3>
+                                        <p:dataTable rows="10" paginator="true" id="tabelaItensVenda" value="#{vendaMB.listaItensVenda}"
+                                                var="obj">
+                                                <p:column style="background: #F8FBEF" headerText="Produto" sortBy="#{produto.nome}" filterBy="#{produto.nome}" >
+                                                        <h:outputText value="#{obj.produto.nome}" />
+                                                </p:column>
+                                                <p:column style="background: #F8FBEF" headerText="Quantidade" sortBy="#{produto.quantidade}" filterBy="#{produto.quantidade}" >
+                                                        <h:outputText value="#{obj.quantidade}" />
+                                                </p:column>
+                                                <p:column style="background: #F8FBEF" headerText="Valor Unitário" sortBy="#{produto.valorUnitario}" filterBy="#{produto.valorUnitario}" >
+                                                        <h:outputText value="#{obj.valorUnitario}" />
+                                                </p:column>
+                                                <p:column style="background: #F8FBEF" headerText="Valor Total" sortBy="#{produto.valorTotal}" filterBy="#{produto.valorTotal}" >
+                                                        <h:outputText value="#{obj.valorTotal}" />
+                                                </p:column>
+                                            
+                                                <p:column headerText="Ações" style="background: #F8FBEF">
+                                                 
+                                                    <p:commandButton style="background: #ffdacc" value="Remover" update="tabelaItensVenda,inputQtd" 
+                                                                     actionListener="#{vendaMB.removerItem(itensVenda.obj)}" ajax="false"/>
+                                                        
+                                                    
+                                                </p:column>
+                                        </p:dataTable>
+                                        
+                                        
+
+                                           <br />
+                                        <p:commandButton style="background: #d6f5ef" value="Finalizar Venda"
+                                                actionListener="#{vendaMB.finalizarVenda()}"
+                                                update="mensagem, @form" />
+                                        
+                                        <p:commandButton style="background: #d6f5ef"
+                                                 value="Consultar"
+                                                 onclick="PF('dlgPesquisar').show();"
+                                                 update="tabelaDialog" />
+
+
+                                </h:form>
+                                <br />
+                                
+                                
+                               
+                                
+                                <p:dialog header="Histórico de Venda" widgetVar="dlgPesquisar"
+                                            modal="true" width="30%" responsive="true">
+                                        <p:dataTable id="tabelaDialog" var="obj"
+                                                     value="#{vendaMB.listaVendas}">
+
+                                                <p:column style="background: #F8FBEF" headerText="Cliente" sortBy="#{produto.cliente.nome}" filterBy="#{produto.cliente.nome}">
+                                                        <h:outputText value="#{obj.cliente.nome}" />
+                                                </p:column>
+
+                                         
+
+                                                <p:column style="background: #F8FBEF" headerText="Valor Venda" sortBy="#{obj.valorTotalVenda}" filterBy="#{obj.valorTotalVenda}">
+                                                        <h:outputText value="#{obj.valorTotalVenda}" >
+                                                                <f:convertNumber pattern="¤#,##0.00" currencySymbol="R$" />
+                                                        </h:outputText>
+                                                </p:column>
+
+                                            <p:column style="background: #F8FBEF" headerText="Data" sortBy="#{obj.dtVenda}" filterBy="#{obj.dtVenda}">
+                                                        <h:outputText value="#{obj.dtVenda}">
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                </p:column>
+                                            <p:column style="background: #F8FBEF" headerText="Data Vcto" sortBy="#{obj.dtVencimento}" filterBy="#{obj.dtVencimento}">
+                                                <h:outputText value="#{obj.dtVencimento}">
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                </p:column>
+
+                                        </p:dataTable>
+
+                                </p:dialog>
+                                
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div> 
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

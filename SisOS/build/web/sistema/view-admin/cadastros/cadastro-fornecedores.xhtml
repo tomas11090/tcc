@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+
+            <ui:define name="content">
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <center><font color="#017c03"><h3>CADASTRO DE FORNECEDORES</h3></font></center>
+                                <p:separator />
+                                
+                                <h:form id="formBotaoNovoFornecedor">
+                                    <p:commandButton style="background: #d6f5ef" 
+                                                    value="Novo Fornecedor"
+                                                     update=":formFormularioFornecedor" 
+                                                     oncomplete="PF('dialogFornecedor').show()"/>
+                                </h:form>
+                                <BR></BR>
+                                
+                                <h:form id="formTabelaFornecedor" style="text-align: center">
+                                    <p:dataTable rows="10" paginator="true" value="#{fornecedorMB.listaFornecedor}" var="fornecedor">
+                                        <p:column style="background: #F8FBEF" headerText="Nome" sortBy="#{fornecedor.nome}" filterBy="#{fornecedor.nome}" >
+                                            <h:outputText value="#{fornecedor.nome}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Telefone" sortBy="#{fornecedor.telefone}" filterBy="#{fornecedor.telefone}" >
+                                            <h:outputText value="#{fornecedor.telefone}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Endereço" sortBy="#{fornecedor.endereco}" filterBy="#{fornecedor.endereco}" >
+                                            <h:outputText value="#{fornecedor.endereco}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Numero" sortBy="#{fornecedor.numero}" filterBy="#{fornecedor.numero}" >
+                                            <h:outputText value="#{fornecedor.numero}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Cidade" sortBy="#{fornecedor.cidade.nome}" filterBy="#{fornecedor.cidade.nome}" >
+                                            <h:outputText value="#{fornecedor.cidade.nome}"/>
+                                        </p:column>
+                                        <p:column style="background: #F8FBEF" headerText="Ações">
+                                            <p:commandButton value="Alterar" 
+                                                             oncomplete="PF('dialogFornecedor').show()"
+                                                             update=":formFormularioFornecedor" >
+                                                <f:setPropertyActionListener value="#{fornecedor}" target="#{fornecedorMB.fornecedor}"/>
+                                            </p:commandButton>    
+                                            <p:commandButton value="Excluir" update="@form" actionListener="#{fornecedorMB.remover(fornecedor.id)}">
+                                                <p:confirm header="Confirmação" message="Deseja excluir o Fornecedor?" icon="ui-icon-alert" />
+                                            </p:commandButton>
+
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+
+                                </h:form>
+
+                                <p:dialog id="dialogFornecedor" header="Cadastro Fornecedor" widgetVar="dialogFornecedor" modal="true" width="auto" height="auto" responsive="true">
+                                    <p:messages id ="mensagem" />
+                                    <h:form id="formFormularioFornecedor">
+                                        <p:panelGrid columns="2" styleClass="semBorda" >
+                                            <h:outputText value="Nome: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.nome}"
+                                                         />
+                                            <h:outputText  value="CNPJ: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.documento}"
+                                                         
+                                                         />
+                                            <h:outputText value="IE: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.rgIE}"
+                                                         />
+                                            <h:outputText value="Endereço: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.endereco}"/>
+                                            <h:outputText value="Número: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.numero}"/>
+                                            <h:outputText value="Complemento: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.complemento}"/>
+                                            <h:outputText value="Bairro: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.bairro}"/>
+                                            <h:outputText value="Cidade:"/>
+                                            <p:selectOneMenu style="width: 100%"
+                                                id="fornecdor" converter="converterCidade" value="#{fornecedorMB.fornecedor.cidade}" required = "true" requiredMessage="Escolha uma cidade">
+                                                <f:selectItem itemLabel="Selecione"/>
+                                                <f:selectItems value="#{cidadeMB.listaCidades}" 
+                                                               var ="cidade"
+                                                               itemLabel="#{cidade.nome}"
+                                                               itemValue="#{cidade}"/>
+                                            </p:selectOneMenu>
+                                            <h:outputText value="CEP:"/>
+                                            <p:inputText
+                                                value="#{fornecedorMB.fornecedor.cep}" 
+                                                validator="validarCep"
+                                                />
+                                            <p:outputLabel for="telefone" value="Telefone:"/>
+                                            <p:inputMask id="telefone" 
+                                                         value="#{fornecedorMB.fornecedor.telefone}" 
+                                                         mask="(99)99999-9999"/>
+                                            <h:outputText value="Observações: "/>
+                                            <p:inputText value="#{fornecedorMB.fornecedor.observacao}" style=" height:100px;" />
+                                            
+                                            <BR></BR>
+                                        <p:commandButton value="Inserir" 
+                                                             style="width: 100%; background: #d6f5ef"
+                                                             actionListener="#{fornecedorMB.inserir()}"
+                                                             oncomplete="handleComplete(xhr, status, args)"
+                                                             update=":formTabelaFornecedor, :mensagem"/>   
+                                            
+                                        </p:panelGrid>
+                                        
+                                    </h:form>
+                                </p:dialog>
+                                <script type="text/javascript">
+                                    function handleComplete(xhr, status, args) {
+                                        if (!args.validationFailed) {
+                                            PF('dialogFornecedor').hide();
+                                        } else {
+                                        }
+                                    }                              
+                                </script>
+                            
+                                
+                                
+                            
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div>
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>    
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

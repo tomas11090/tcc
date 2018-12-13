@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template-admin.xhtml">
+
+            <ui:define name="content">
+                <div id="page-wrapper" >
+                    <div id="page-inner">
+                        <div class="row">
+                            <div class="col-md-12">
+                                
+                                <center><font color="#017c03"><h3>GERAR ORDEM DE SERVIÇO</h3></font></center>
+                                <p:separator />
+                                        <!--<p:panelGrid columns="1" styleClass="semBorda">-->
+<!--                                            <h:form id="formBotaoNovoServico">
+                                            <p:commandButton style="background: #d6f5ef" 
+                                                                        value="Novo Servico" 
+                                                                    update=":formFormularioServico" 
+                                                            oncomplete="PF('dialogServico').show()"/>
+                                            </h:form>-->
+                                        <!--</p:panelGrid>-->
+                                
+                                <p:growl id="mensagem" />
+                                
+                                
+                                
+                                <h:form id="formularioCabecalhoOS" >
+                                        <p:panelGrid columns="2" styleClass="semBorda">
+                                                <h:outputText  value="Data Emissão:" />
+                                                <p:calendar pattern="dd/MM/yyyy" value="#{ordemServicoMB.ordemServico.dtOrdemServico}" />                             
+                                                <h:outputText value="Cliente" />
+                                                <p:selectOneMenu filter="true"
+                                                            filterMatchMode="startsWith"
+                                                            style="width: auto" 
+                                                            value="#{ordemServicoMB.ordemServico.cliente}"
+                                                            converter="converterCliente" >
+                                                    <f:selectItems value="#{clienteMB.listaClientes}" var="obj"
+                                                                itemLabel="#{obj.nome}" itemValue="#{obj}" />
+                                                </p:selectOneMenu>   
+                                                <h:outputText value="Observações:" />
+                                                <p:inputText value="#{clienteMB.cliente.observacao}" style="width: auto" />
+                                          
+                                                <h:outputText  value="Data Vencimento:" />
+                                                <p:calendar pattern="dd/MM/yyyy" value="#{vendaMB.venda.dtVencimento}" />
+                                        </p:panelGrid>
+                                        <br/>
+                                        <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                            <p:outputLabel for="decisao" value="Situação:  " />
+                                            
+                                            <p:selectOneRadio id="decisao" value="#{ordemServicoMB.ordemServico.status}">
+                                                <f:selectItem itemLabel="Agendado" itemValue="Agendado" />
+                                                <f:selectItem itemLabel="Em Execução" itemValue="Em Execução"  />
+                                                <f:selectItem itemLabel="Cancelada" itemValue="Cancelada" />
+                                                <f:selectItem itemLabel="Concluida" itemValue="Concluida" />
+                                                
+                                            </p:selectOneRadio>
+                                        </h:panelGrid>
+                                        <p:separator></p:separator>
+                                        <!-- 		INÍCIO ITENS DE VENDA -->
+                                        <p:panelGrid columns="7" styleClass="semBorda">
+                                            <h:outputText value="Servico:" /> 
+                                            <p:selectOneMenu  style="width: 100%" value="#{ordemServicoMB.itensOS.servico}"
+                                                        converter="converterServico" >
+                                                <f:selectItems  value="#{servicoMB.listaServicos}" var="obj"
+                                                                itemLabel="#{obj.descricao}" itemValue="#{obj}" />
+                                                </p:selectOneMenu>
+                                                <h:outputText value="Valor:" />
+                                                <p:inputText id="inputQtd" value="#{ordemServicoMB.itensOS.quantidade}" />
+                                                <p:commandButton style="background: #d6f5ef" value="Add" update="tabelaItensOS,inputQtd"
+                                                                 actionListener="#{ordemServicoMB.adicionarItem()}" />
+                                                <p:panelGrid columns="1" styleClass="semBorda">
+                                                    <h:form id="formBotaoNovoServico">
+                                                    <p:commandButton style="background: #d6f5ef" 
+                                                                                value="Novo Servico" 
+                                                                            update=":formFormularioServico" 
+                                                                    oncomplete="PF('dialogServico').show()"/>
+                                                    </h:form>
+                                                </p:panelGrid>
+                                        </p:panelGrid>
+                                        
+                                        
+                                        <!-- 		FIM DO ITENS DE VENDA --><h3>Descrição Serviços</h3>
+                                        <p:dataTable rows="10" paginator="true" id="tabelaItensOS" value="#{ordemServicoMB.listaItensOS}"
+                                                var="obj">
+                                                <p:column style="background: #F8FBEF" headerText="Servico" sortBy="#{servico.descricao}" filterBy="#{servico.descricao}" >
+                                                        <h:outputText value="#{obj.servico.descricao}" />
+                                                </p:column>
+<!--                                                <p:column style="background: #F8FBEF" headerText="Quantidade" sortBy="#{servico.quantidade}" filterBy="#{servico.quantidade}" >
+                                                        <h:outputText value="#{obj.quantidade}" />
+                                                </p:column>-->
+<!--                                                <p:column style="background: #F8FBEF" headerText="Valor Unitário" sortBy="#{servico.valorUnitario}" filterBy="#{servico.valorUnitario}" >
+                                                        <h:outputText value="#{obj.valorUnitario}" />
+                                                </p:column>-->
+                                                <p:column style="background: #F8FBEF" headerText="Valor Total" sortBy="#{servico.valorTotal}" filterBy="#{servico.valorTotal}" >
+                                                        <h:outputText value="#{obj.valorTotal}" />
+                                                </p:column>
+                                            
+                                                <p:column headerText="Ações" style="background: #F8FBEF">
+                                                 
+                                                    <p:commandButton style="background: #ffdacc" value="Remover" update="tabelaItensOS,inputQtd" 
+                                                                     actionListener="#{ordemServicoMB.removerItem(itensOS.obj)}" ajax="false"/>
+                                                        
+                                                    
+                                                </p:column>
+                                        </p:dataTable>
+                                        
+                                        
+
+                                           <br />
+                                        <p:commandButton style="background: #d6f5ef" value="Finalizar Ordem de Servico"
+                                                         actionListener="#{ordemServicoMB.finalizarOS()}"
+                                                update="mensagem, @form" />
+                                        
+                                        <p:commandButton style="background: #d6f5ef"
+                                                 value="Consultar"
+                                                 onclick="PF('dlgPesquisar').show();"
+                                                 update="tabelaDialog" />
+                                       <br/>  
+
+
+                                </h:form>
+                                <br />
+                                
+                                
+                               
+                                
+                                <p:dialog header="Histórico de Ordem de serviço" widgetVar="dlgPesquisar"
+                                            modal="true" width="30%" responsive="true">
+                                        <p:dataTable id="tabelaDialog" var="obj"
+                                                     value="#{ordemServicoMB.listaOrdemServico}">
+
+                                                <p:column style="background: #F8FBEF" headerText="Cliente" sortBy="#{servico.cliente.nome}" filterBy="#{servico.cliente.nome}">
+                                                        <h:outputText value="#{obj.cliente.nome}" />
+                                                </p:column>
+
+                                         
+
+                                            <p:column style="background: #F8FBEF" headerText="Valor OS" sortBy="#{obj.valorTotalOrdemServico}" filterBy="#{obj.valorTotalOrdemServico}">
+                                                <h:outputText value="#{obj.valorTotalOrdemServico}" >
+                                                                <f:convertNumber pattern="¤#,##0.00" currencySymbol="R$" />
+                                                        </h:outputText>
+                                                </p:column>
+
+                                            <p:column style="background: #F8FBEF" headerText="Data" sortBy="#{obj.dtOrdemServico}" filterBy="#{obj.dtOrdemServico}">
+                                                <h:outputText value="#{obj.dtOrdemServico}">
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                </p:column>
+                                            
+                                            <p:column style="background: #F8FBEF" headerText="Status" sortBy="#{obj.status}" filterBy="#{status}">
+                                                        <h:outputText value="#{obj.status}" />
+                                                </p:column>
+                                            
+                                            <p:column style="background: #F8FBEF" headerText="Data Vcto" sortBy="#{obj.dtVencimento}" filterBy="#{obj.dtVencimento}">
+                                                <h:outputText value="#{obj.dtVencimento}">
+                                                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                                        </h:outputText>
+                                                </p:column>
+
+                                        </p:dataTable>
+
+                                </p:dialog>
+                                
+                                <p:dialog id="dialogServico" header="Cadastro Servico" widgetVar="dialogServico" modal="true" height="auto" responsive="true">
+                                    
+                                    <h:form  id="formFormularioServico">
+                                        <p:panelGrid columns="2" styleClass="semBorda">
+                                            <h:outputText value="Nome"/>
+                                            <p:inputText value="#{servicoMB.servico.descricao}"/>
+                                            
+                                            <!--<h:outputText value="Quantidade"/>-->
+                                            <p:inputText disabled="true" style="visibility:hidden" value="#{servicoMB.servico.quantidadeEstoque}"/>
+                                            
+                                            <!--<h:outputText value="Valor Item"/>-->
+                                            <p:inputText disabled="true" style="visibility:hidden" value="#{servicoMB.servico.valorOS}"/>
+                                            
+                                        <BR></BR>    
+                                        <p:commandButton value="Inserir" 
+                                                             actionListener="#{servicoMB.inserir()}"
+                                                             oncomplete="PF('dialogServico').hide()"
+                                                              
+                                                             style="width: 100%; background: #d6f5ef"/>
+                                            
+                                        </p:panelGrid>
+                                       
+                                       
+                                    </h:form>
+                                </p:dialog>
+                                
+                            </div>
+                        </div>
+                        <hr />
+                    </div>       
+                </div> 
+                <style>
+                    .semBorda tr, .semBorda td {
+                            border: none !important;
+                        }
+
+                </style>
+                                
+                                
+                           
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
